@@ -1,0 +1,68 @@
+.center {
+  display: flex;
+  justify-content: center;
+  padding: var(--pnk-space-xl) 0;
+}
+
+// "sábado 7 de noviembre" -> "Sábado 7 de noviembre": only the first letter, as Spanish writes dates.
+.capitalize::first-letter {
+  text-transform: uppercase;
+}
+
+.label {
+  margin: var(--pnk-space-md) 0 var(--pnk-space-sm);
+  font-weight: 700;
+}
+
+.hours {
+  display: flex;
+  gap: var(--pnk-space-sm);
+
+  button {
+    flex: 1;
+    min-height: var(--pnk-touch-min);
+    border-radius: var(--pnk-radius-md);
+    border: 1px solid var(--ion-color-medium);
+    background: transparent;
+    color: var(--ion-text-color);
+    font-size: var(--pnk-text-body);
+
+    &.selected {
+      background: var(--ion-color-primary);
+      border-color: var(--ion-color-primary);
+      color: var(--ion-color-primary-contrast);
+    }
+  }
+}
+
+.amounts {
+  margin: var(--pnk-space-lg) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pnk-space-sm);
+
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .deposit {
+    padding: var(--pnk-space-md);
+    border-radius: var(--pnk-radius-md);
+    background: rgba(var(--ion-color-tertiary-rgb), 0.18);
+  }
+}
+
+.cta {
+  min-height: var(--pnk-touch-min);
+}
+
+.created {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  ion-icon {
+    font-size: calc(var(--pnk-touch-min) * 1.5);
+  }
+}
