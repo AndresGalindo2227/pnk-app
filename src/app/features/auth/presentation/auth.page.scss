@@ -1,0 +1,20 @@
+// Shared styles of the login and sign-up screens. Only tokens, no raw values.
+.pnk-title {
+  font-size: var(--pnk-text-title);
+  margin: var(--pnk-space-lg) 0 var(--pnk-space-md);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pnk-space-md);
+}
+
+ion-button {
+  min-height: var(--pnk-touch-min);
+  margin-top: var(--pnk-space-sm);
+}
+
+ion-note {
+  font-size: var(--pnk-text-caption);
+}

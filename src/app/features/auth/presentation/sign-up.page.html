@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" [text]="'common.back' | text"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'auth.signUp.title' | text }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <ion-input
+      formControlName="fullName"
+      autocomplete="name"
+      fill="outline"
+      labelPlacement="floating"
+      [label]="'auth.signUp.fullName' | text"
+      [errorText]="'auth.validation.nameLength' | text"
+    ></ion-input>
+
+    <ion-input
+      formControlName="email"
+      type="email"
+      inputmode="email"
+      autocomplete="email"
+      fill="outline"
+      labelPlacement="floating"
+      [label]="'auth.login.email' | text"
+      [errorText]="'auth.validation.email' | text"
+    ></ion-input>
+
+    <ion-input
+      formControlName="phone"
+      type="tel"
+      inputmode="numeric"
+      autocomplete="tel"
+      maxlength="10"
+      fill="outline"
+      labelPlacement="floating"
+      [label]="'auth.signUp.phone' | text"
+      [errorText]="'auth.validation.phone' | text"
+    ></ion-input>
+
+    <ion-input
+      formControlName="password"
+      type="password"
+      autocomplete="new-password"
+      fill="outline"
+      labelPlacement="floating"
+      [label]="'auth.login.password' | text"
+      [helperText]="'auth.signUp.passwordHint' | text"
+      [errorText]="'auth.validation.passwordLength' | text"
+    ></ion-input>
+
+    @if (store.view(); as view) { @if (view.status === 'error') {
+    <ion-note color="danger" role="alert">{{ view.message }}</ion-note>
+    } }
+
+    <ion-button type="submit" expand="block" [disabled]="store.isSubmitting()">
+      @if (store.isSubmitting()) {
+      <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+      } @else { {{ 'auth.signUp.submit' | text }} }
+    </ion-button>
+  </form>
+
+  <ion-button fill="clear" expand="block" routerLink="/login">{{ 'auth.signUp.hasAccount' | text }}</ion-button>
+</ion-content>

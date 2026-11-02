@@ -1,0 +1,7 @@
+{
+  "name": "pnk-app-scaffold",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
