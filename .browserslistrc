@@ -1,0 +1,9 @@
+# Browsers supported by Angular 22 (https://angular.dev/reference/versions#browser-support).
+# The Android WebView updates with Chrome, so the app always runs on a recent engine.
+last 2 Chrome versions
+last 1 Firefox version
+last 2 Edge major versions
+last 2 Safari major versions
+last 2 iOS major versions
+last 2 Android major versions
+Firefox ESR
