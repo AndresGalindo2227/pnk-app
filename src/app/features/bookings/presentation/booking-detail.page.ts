@@ -67,6 +67,8 @@ export default class BookingDetailPage implements OnInit {
   private readonly cancelBooking = inject(CancelBookingUseCase);
 
   protected readonly justCreated = this.route.snapshot.queryParamMap.has('created');
+  /** Result of scheduling the HU-07 reminder, sent by the confirmation screen. */
+  protected readonly reminder = this.route.snapshot.queryParamMap.get('reminder');
   protected readonly view = signal<DetailView>({ status: 'loading' });
   protected readonly statusColor: Record<string, string> = {
     pending: 'warning',
