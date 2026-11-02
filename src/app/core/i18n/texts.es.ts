@@ -43,6 +43,14 @@ export const TEXTS_ES = {
     sessionExpired: 'Tu sesión expiró. Inicia sesión de nuevo.',
     logout: 'Cerrar sesión',
   },
+  myBookings: {
+    title: 'Mis reservas',
+    upcoming: 'Próximas',
+    past: 'Pasadas',
+    empty: 'Todavía no tienes reservas.',
+    stale: 'Sin conexión. Mostrando datos guardados, actualizado hace',
+    offlineNoCopy: 'Sin conexión y sin datos guardados. Conéctate para ver tus reservas.',
+  },
   bookings: {
     availability: {
       title: 'Disponibilidad',
