@@ -4,6 +4,7 @@
  * See the error catalog in pnk-docs/03-api-and-data/README.md
  */
 export const ERROR_MESSAGES_ES: Readonly<Record<string, string>> = {
+  SLOT_IN_THE_PAST: 'Esa hora ya pasó. Elige otra.',
   SLOT_ALREADY_TAKEN: 'Alguien reservó esa hora hace un momento. Elige otra.',
   CANCELLATION_WINDOW_CLOSED: 'Solo puedes cancelar hasta 3 horas antes del partido.',
   BOOKING_NOT_CANCELLABLE: 'Esta reserva ya no se puede cancelar.',

@@ -22,7 +22,7 @@ Node.js 24+, npm, Ionic CLI 7, Android Studio (SDK 36, JDK 21).
 npm install
 
 # 1. Mock API generated from the OpenAPI contract (in a clone of pnk-docs)
-npx @stoplight/prism-cli mock -d 03-api-and-data/openapi.yaml
+npx @stoplight/prism-cli mock 03-api-and-data/openapi.yaml
 
 # 2. App in the browser
 ionic serve

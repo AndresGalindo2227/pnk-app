@@ -1,18 +1,48 @@
-import { Component } from '@angular/core';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import type { OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { IonButton, IonContent, IonHeader, IonIcon, IonSpinner, IonText, IonTitle, IonToolbar } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { cloudOfflineOutline, informationCircleOutline } from 'ionicons/icons';
 
 import { TextPipe } from '../../../core/i18n/text.pipe';
 
-/** HU-03 - placeholder until the feature is implemented. */
+import { AvailabilityStore } from './availability.store';
+
+/** HU-03: free and taken hours of every field for the selected day. */
 @Component({
-  imports: [TextPipe, IonHeader, IonToolbar, IonTitle, IonContent],
-  template: `
-    <ion-header>
-      <ion-toolbar color="secondary"
-        ><ion-title>{{ 'tabs.book' | text }}</ion-title></ion-toolbar
-      >
-    </ion-header>
-    <ion-content class="ion-padding"><p>HU-03</p></ion-content>
-  `,
+  selector: 'pnk-availability-page',
+  imports: [
+    DatePipe,
+    CurrencyPipe,
+    TextPipe,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    IonSpinner,
+    IonText,
+    IonIcon,
+  ],
+  providers: [AvailabilityStore],
+  templateUrl: './availability.page.html',
+  styleUrl: './availability.page.scss',
 })
-export default class AvailabilityPage {}
+export default class AvailabilityPage implements OnInit {
+  protected readonly store = inject(AvailabilityStore);
+  private readonly router = inject(Router);
+
+  constructor() {
+    addIcons({ cloudOfflineOutline, informationCircleOutline });
+  }
+
+  ngOnInit(): void {
+    void this.store.load();
+  }
+
+  book(fieldId: number, start: string): void {
+    void this.router.navigate(['/bookings/new'], { queryParams: { fieldId, start } });
+  }
+}
