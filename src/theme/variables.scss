@@ -1,0 +1,65 @@
+// =============================================================================
+// Ionic CSS variables themed with the PANENKA palette.
+// Screens never use raw colors: they use these variables or the --pnk-* tokens.
+// See pnk-docs/02-code-and-ui/design-system.md
+// =============================================================================
+
+:root {
+  --ion-font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+
+  // Primary - field green: main actions ("Reservar", "Confirmar")
+  --ion-color-primary: #1b7f3b;
+  --ion-color-primary-rgb: 27, 127, 59;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #187034;
+  --ion-color-primary-tint: #328c4f;
+
+  // Secondary - dark green: headers, selected tab
+  --ion-color-secondary: #0f3d23;
+  --ion-color-secondary-rgb: 15, 61, 35;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #0d361f;
+  --ion-color-secondary-tint: #275039;
+
+  // Tertiary - accent yellow: prices, "hoy"
+  --ion-color-tertiary: #f2b705;
+  --ion-color-tertiary-rgb: 242, 183, 5;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+  --ion-color-tertiary-shade: #d5a104;
+  --ion-color-tertiary-tint: #f3be1e;
+
+  // Success - slot available, booking confirmed
+  --ion-color-success: #2e7d32;
+  --ion-color-success-rgb: 46, 125, 50;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #286e2c;
+  --ion-color-success-tint: #438a47;
+
+  // Warning - pending payment
+  --ion-color-warning: #b26a00;
+  --ion-color-warning-rgb: 178, 106, 0;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-contrast-rgb: 255, 255, 255;
+  --ion-color-warning-shade: #9d5d00;
+  --ion-color-warning-tint: #ba791a;
+
+  // Danger - slot taken, errors, cancel
+  --ion-color-danger: #c62828;
+  --ion-color-danger-rgb: 198, 40, 40;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ae2323;
+  --ion-color-danger-tint: #cc3e3e;
+
+  // Medium - secondary text
+  --ion-color-medium: #5f6b66;
+  --ion-color-medium-rgb: 95, 107, 102;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #545e5a;
+  --ion-color-medium-tint: #6f7a75;
+}
