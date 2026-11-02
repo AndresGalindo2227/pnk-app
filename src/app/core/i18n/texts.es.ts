@@ -51,6 +51,23 @@ export const TEXTS_ES = {
     stale: 'Sin conexión. Mostrando datos guardados, actualizado hace',
     offlineNoCopy: 'Sin conexión y sin datos guardados. Conéctate para ver tus reservas.',
   },
+  payments: {
+    receipt: {
+      title: 'Subir comprobante',
+      upload: 'Subir comprobante de pago',
+      amount: 'Abono a pagar:',
+      hint: 'Toma una foto clara de la transferencia de Nequi, Daviplata o Bancolombia.',
+      takePhoto: 'Tomar foto',
+      gallery: 'Galería',
+      previewAlt: 'Foto del comprobante',
+      send: 'Enviar comprobante',
+      uploaded: 'Comprobante enviado. Lo revisaremos pronto.',
+      queued: 'Sin señal: guardamos el comprobante y lo enviaremos automáticamente cuando vuelva la conexión.',
+      offlineNote: 'Si no tienes señal, lo enviaremos automáticamente cuando vuelva la conexión.',
+      cameraDenied: 'No diste permiso para la cámara. Puedes elegir la foto desde la galería.',
+      backToBooking: 'Volver a la reserva',
+    },
+  },
   bookings: {
     availability: {
       title: 'Disponibilidad',
@@ -74,6 +91,8 @@ export const TEXTS_ES = {
       title: 'Detalle de reserva',
       created: '¡Reserva creada!',
       reminder: 'Te recordaremos 1 hora antes del partido.',
+      reminderDenied:
+        'La reserva quedó guardada. Para recibir el recordatorio, activa las notificaciones de PANENKA en los ajustes del celular.',
       code: 'Código de reserva',
       cancel: 'Cancelar reserva',
       seeMine: 'Ver mis reservas',
