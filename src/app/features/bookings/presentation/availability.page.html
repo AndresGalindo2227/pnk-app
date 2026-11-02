@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>{{ 'bookings.availability.title' | text }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Date selector: today + 6 days -->
+  <div class="dates" role="tablist" [attr.aria-label]="'bookings.availability.pickDate' | text">
+    @for (date of store.dates; track date) {
+    <button
+      type="button"
+      role="tab"
+      class="date-chip"
+      [class.selected]="date === store.selectedDate()"
+      [attr.aria-selected]="date === store.selectedDate()"
+      (click)="store.select(date)"
+    >
+      <span class="weekday">{{ date + 'T12:00:00-05:00' | date: 'EEE' : '-0500' }}</span>
+      <span class="day">{{ date + 'T12:00:00-05:00' | date: 'd' : '-0500' }}</span>
+    </button>
+    }
+  </div>
+
+  <p class="rule">
+    <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+    {{ 'bookings.availability.sectorRule' | text }}
+  </p>
+
+  @switch (store.view().status) { @case ('loading') {
+  <div class="center"><ion-spinner name="crescent" [attr.aria-label]="'common.loading' | text"></ion-spinner></div>
+  } @case ('offline') {
+  <div class="center" role="status">
+    <ion-icon name="cloud-offline-outline" class="big" aria-hidden="true"></ion-icon>
+    <p>{{ 'bookings.availability.offline' | text }}</p>
+    <ion-button (click)="store.load()">{{ 'common.retry' | text }}</ion-button>
+  </div>
+  } @case ('empty') {
+  <div class="center" role="status">
+    <p>{{ 'bookings.availability.empty' | text }}</p>
+  </div>
+  } } @if (store.view(); as view) { @if (view.status === 'error') {
+  <div class="center" role="alert">
+    <ion-text color="danger"><p>{{ view.message }}</p></ion-text>
+    <ion-button (click)="store.load()">{{ 'common.retry' | text }}</ion-button>
+  </div>
+  } @if (view.status === 'loaded') {
+  <div class="grid" role="table" [style.--fields]="view.day.fields.length">
+    <div class="row head" role="row">
+      <span role="columnheader">{{ 'bookings.availability.hour' | text }}</span>
+      @for (field of view.day.fields; track field.fieldId) {
+      <span role="columnheader" class="field">
+        <strong>{{ field.name }}</strong>
+        <small>{{ field.hourlyPrice | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</small>
+      </span>
+      }
+    </div>
+
+    @for (row of view.rows; track row.startsAt) {
+    <div class="row" role="row">
+      <span role="rowheader" class="hour">{{ row.startsAt | date: 'HH:mm' : '-0500' }}</span>
+      @for (cell of row.cells; track cell.fieldId) { @if (cell.available) {
+      <button type="button" role="cell" class="slot free" (click)="book(cell.fieldId, cell.startsAt)">
+        {{ 'bookings.slot.free' | text }}
+      </button>
+      } @else {
+      <span role="cell" class="slot taken">{{ 'bookings.slot.taken' | text }}</span>
+      } }
+    </div>
+    }
+  </div>
+  } }
+</ion-content>
