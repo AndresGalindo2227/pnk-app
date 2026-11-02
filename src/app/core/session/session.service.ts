@@ -4,6 +4,7 @@ import type { Observable } from 'rxjs';
 import { catchError, finalize, from, map, of, shareReplay, switchMap, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
+import { LocalCache } from '../storage/local-cache';
 import { TokenStore } from '../storage/token-store';
 
 import type { SessionPlayer, SessionTokens } from './session.model';
@@ -25,6 +26,7 @@ interface AuthSessionDto {
 export class SessionService {
   private readonly http = inject(HttpClient);
   private readonly tokenStore = inject(TokenStore);
+  private readonly cache = inject(LocalCache);
 
   private readonly token = signal<string | null>(null);
   private readonly currentPlayer = signal<SessionPlayer | null>(null);
@@ -75,11 +77,12 @@ export class SessionService {
     return this.refreshInFlight$;
   }
 
-  /** Closes the session locally: tokens and player are removed. */
+  /** Closes the session locally: tokens, player and cached data are removed. */
   async clear(): Promise<void> {
     this.token.set(null);
     this.currentPlayer.set(null);
     await this.tokenStore.clear();
+    await this.cache.clearAll(); // cached bookings belong to this player only
   }
 
   /** Revokes the refresh token on the server (best effort) and clears the local session. */

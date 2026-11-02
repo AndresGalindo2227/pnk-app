@@ -1,0 +1,34 @@
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--pnk-space-xl) var(--pnk-space-md);
+  text-align: center;
+
+  .big {
+    font-size: calc(var(--pnk-touch-min) * 1.5);
+    color: var(--ion-color-medium);
+  }
+}
+
+// Stale banner: data comes from the device copy (HU-05, ADR-004).
+.stale {
+  display: flex;
+  align-items: center;
+  gap: var(--pnk-space-sm);
+  margin: var(--pnk-space-sm) var(--pnk-space-md);
+  padding: var(--pnk-space-sm) var(--pnk-space-md);
+  border-radius: var(--pnk-radius-md);
+  background: rgba(var(--ion-color-warning-rgb), 0.2);
+  color: var(--ion-text-color);
+  font-size: var(--pnk-text-caption);
+}
+
+.code {
+  font-size: var(--pnk-text-caption);
+  letter-spacing: 0.05em;
+}
+
+.capitalize::first-letter {
+  text-transform: uppercase;
+}
