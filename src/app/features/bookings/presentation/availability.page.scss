@@ -1,0 +1,99 @@
+// Only tokens: no raw colors or sizes (design-system.md).
+.dates {
+  display: flex;
+  gap: var(--pnk-space-sm);
+  overflow-x: auto;
+  padding-bottom: var(--pnk-space-sm);
+}
+
+.date-chip {
+  min-width: var(--pnk-touch-min);
+  min-height: calc(var(--pnk-touch-min) + var(--pnk-space-md));
+  border-radius: var(--pnk-radius-md);
+  border: 1px solid var(--ion-color-medium);
+  background: transparent;
+  color: var(--ion-text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+
+  .day {
+    font-size: var(--pnk-text-title);
+    font-weight: 700;
+  }
+
+  &.selected {
+    background: var(--ion-color-primary);
+    border-color: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+  }
+}
+
+.rule {
+  display: flex;
+  gap: var(--pnk-space-sm);
+  font-size: var(--pnk-text-caption);
+  color: var(--ion-color-medium);
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--pnk-space-xl) 0;
+  text-align: center;
+
+  .big {
+    font-size: calc(var(--pnk-touch-min) * 1.5);
+    color: var(--ion-color-medium);
+  }
+}
+
+.grid .row {
+  display: grid;
+  grid-template-columns: 3.5rem repeat(var(--fields), minmax(0, 1fr));
+  gap: var(--pnk-space-xs);
+  margin-bottom: var(--pnk-space-xs);
+  align-items: center;
+
+  &.head {
+    font-size: var(--pnk-text-caption);
+    text-align: center;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+
+  small {
+    color: var(--ion-color-tertiary);
+  }
+}
+
+.hour {
+  font-weight: 700;
+}
+
+.slot {
+  min-height: var(--pnk-touch-min);
+  border-radius: var(--pnk-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--pnk-text-caption);
+  border: none;
+
+  &.free {
+    background: rgba(var(--ion-color-success-rgb), 0.15);
+    color: var(--ion-color-success);
+    font-weight: 700;
+  }
+
+  &.taken {
+    background: rgba(var(--ion-color-danger-rgb), 0.15);
+    color: var(--ion-color-danger);
+  }
+}

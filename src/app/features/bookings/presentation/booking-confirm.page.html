@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/availability" [text]="'common.back' | text"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'bookings.confirm.title' | text }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (store.view().status === 'loading') {
+  <div class="center"><ion-spinner name="crescent" [attr.aria-label]="'common.loading' | text"></ion-spinner></div>
+  } @if (store.field(); as field) {
+  <ion-list class="summary">
+    <ion-item>
+      <ion-label>
+        <h2>{{ field.name }}</h2>
+        <p class="capitalize">{{ start | date: 'EEEE d \'de\' MMMM' : '-0500' }}</p>
+        <p>{{ start | date: 'h:mm a' : '-0500' }} – {{ endOf(start, store.hours()) | date: 'h:mm a' : '-0500' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p class="label">{{ 'bookings.confirm.hours' | text }}</p>
+  <div class="hours" role="radiogroup" [attr.aria-label]="'bookings.confirm.hours' | text">
+    @for (h of store.hourOptions; track h) {
+    <button
+      type="button"
+      role="radio"
+      [attr.aria-checked]="h === store.hours()"
+      [class.selected]="h === store.hours()"
+      (click)="store.setHours(h)"
+    >
+      {{ h }} h
+    </button>
+    }
+  </div>
+
+  <div class="amounts">
+    <div>
+      <span>{{ 'bookings.confirm.total' | text }}</span
+      ><strong>{{ store.amounts().total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
+    </div>
+    <div class="deposit">
+      <span>{{ 'bookings.confirm.deposit' | text }}</span
+      ><strong>{{ store.amounts().deposit | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
+    </div>
+    <ion-note>{{ 'bookings.confirm.cancelRule' | text }}</ion-note>
+  </div>
+
+  @if (store.view(); as view) { @if (view.status === 'taken') {
+  <div class="alert" role="alert">
+    <ion-text color="danger"><p>{{ view.message }}</p></ion-text>
+    <ion-button expand="block" fill="outline" (click)="backToAvailability()"
+      >{{ 'bookings.confirm.pickAnother' | text }}</ion-button
+    >
+  </div>
+  } @if (view.status === 'error') {
+  <ion-text color="danger" role="alert"><p>{{ view.message }}</p></ion-text>
+  } }
+
+  <ion-button
+    expand="block"
+    class="cta"
+    [disabled]="store.view().status === 'submitting' || store.view().status === 'taken'"
+    (click)="store.confirm(start)"
+  >
+    @if (store.view().status === 'submitting') {
+    <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+    } @else { {{ 'bookings.confirm.submit' | text }} }
+  </ion-button>
+  }
+</ion-content>
