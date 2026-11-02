@@ -1,7 +1,7 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import type { OnInit } from '@angular/core';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import type { ViewWillEnter } from '@ionic/angular';
 import { IonButton, IonContent, IonHeader, IonIcon, IonSpinner, IonText, IonTitle, IonToolbar } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { cloudOfflineOutline, informationCircleOutline } from 'ionicons/icons';
@@ -30,7 +30,7 @@ import { AvailabilityStore } from './availability.store';
   templateUrl: './availability.page.html',
   styleUrl: './availability.page.scss',
 })
-export default class AvailabilityPage implements OnInit {
+export default class AvailabilityPage implements ViewWillEnter {
   protected readonly store = inject(AvailabilityStore);
   private readonly router = inject(Router);
 
@@ -38,7 +38,11 @@ export default class AvailabilityPage implements OnInit {
     addIcons({ cloudOfflineOutline, informationCircleOutline });
   }
 
-  ngOnInit(): void {
+  /**
+   * Ionic keeps tab pages alive, so ngOnInit runs only once. Availability changes every minute and is
+   * never shown from cache (offline-sync.md): reload it every time the tab is shown.
+   */
+  ionViewWillEnter(): void {
     void this.store.load();
   }
 

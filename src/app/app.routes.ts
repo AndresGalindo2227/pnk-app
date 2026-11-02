@@ -4,6 +4,7 @@ import { authGuard } from './core/session/auth.guard';
 import { guestGuard } from './core/session/guest.guard';
 import { provideAuth } from './features/auth/auth.providers';
 import { provideBookings } from './features/bookings/bookings.providers';
+import { provideMyBookings } from './features/my-bookings/my-bookings.providers';
 
 /**
  * Single route table of pnk-app (ADR-002). Keep it in sync with
@@ -26,7 +27,7 @@ export const routes: Routes = [
     path: '',
     canMatch: [authGuard],
     loadComponent: () => import('./core/shell/shell.page'),
-    providers: [provideBookings()],
+    providers: [provideBookings(), provideMyBookings()],
     children: [
       { path: 'availability', loadComponent: () => import('./features/bookings/presentation/availability.page') },
       // Static segment before the parameter: 'bookings/new' must not match 'bookings/:id'.
