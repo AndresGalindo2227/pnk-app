@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>{{ 'common.appName' | text }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h1 class="pnk-title">{{ 'auth.login.title' | text }}</h1>
+
+  @if (sessionExpired) {
+  <ion-text color="warning" role="status"><p>{{ 'auth.sessionExpired' | text }}</p></ion-text>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <ion-input
+      formControlName="email"
+      type="email"
+      inputmode="email"
+      autocomplete="email"
+      fill="outline"
+      labelPlacement="floating"
+      [label]="'auth.login.email' | text"
+      [errorText]="'auth.validation.email' | text"
+    ></ion-input>
+
+    <ion-input
+      formControlName="password"
+      type="password"
+      autocomplete="current-password"
+      fill="outline"
+      labelPlacement="floating"
+      [label]="'auth.login.password' | text"
+      [errorText]="'auth.validation.required' | text"
+    ></ion-input>
+
+    @if (store.view(); as view) { @if (view.status === 'error') {
+    <ion-note color="danger" role="alert">{{ view.message }}</ion-note>
+    } }
+
+    <ion-button type="submit" expand="block" [disabled]="store.isSubmitting()">
+      @if (store.isSubmitting()) {
+      <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+      } @else { {{ 'auth.login.submit' | text }} }
+    </ion-button>
+  </form>
+
+  <ion-button fill="clear" expand="block" routerLink="/sign-up">{{ 'auth.login.noAccount' | text }}</ion-button>
+</ion-content>

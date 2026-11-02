@@ -1,0 +1,31 @@
+// =============================================================================
+// PANENKA design tokens (--pnk-*) built on top of the Ionic variables.
+// Sizes use rem so text scales with the OS font-size setting (accessibility).
+// =============================================================================
+
+:root {
+  // Spacing - 4 pt scale
+  --pnk-space-xs: 4px;
+  --pnk-space-sm: 8px;
+  --pnk-space-md: 16px;
+  --pnk-space-lg: 24px;
+  --pnk-space-xl: 32px;
+
+  // Radius
+  --pnk-radius-sm: 8px;
+  --pnk-radius-md: 12px;
+  --pnk-radius-pill: 999px;
+
+  // Typography
+  --pnk-text-title: 1.375rem;
+  --pnk-text-body: 1rem;
+  --pnk-text-caption: 0.875rem;
+
+  // Minimum touch target (Android 48 dp)
+  --pnk-touch-min: 48px;
+
+  // Slot status
+  --pnk-slot-free: var(--ion-color-success);
+  --pnk-slot-taken: var(--ion-color-danger);
+  --pnk-slot-selected: var(--ion-color-primary);
+}
