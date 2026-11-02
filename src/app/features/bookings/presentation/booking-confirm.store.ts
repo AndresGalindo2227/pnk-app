@@ -7,6 +7,8 @@ import { BOOKING_RULES, estimateAmounts } from '../domain/booking-rules';
 import { BookingsRepository } from '../domain/bookings.repository';
 import { CreateBookingUseCase } from '../domain/create-booking.usecase';
 import type { Field } from '../domain/field';
+import type { ReminderResult } from '../domain/reminder.port';
+import { ScheduleReminderUseCase } from '../domain/schedule-reminder.usecase';
 
 /** States of the confirmation screen (HU-04). `taken` is the 409 SLOT_ALREADY_TAKEN case. */
 export type ConfirmView =
@@ -15,12 +17,13 @@ export type ConfirmView =
   | { readonly status: 'submitting' }
   | { readonly status: 'taken'; readonly message: string }
   | { readonly status: 'error'; readonly message: string }
-  | { readonly status: 'done'; readonly booking: Booking };
+  | { readonly status: 'done'; readonly booking: Booking; readonly reminder: ReminderResult };
 
 @Injectable()
 export class BookingConfirmStore {
   private readonly repository = inject(BookingsRepository);
   private readonly createBooking = inject(CreateBookingUseCase);
+  private readonly scheduleReminder = inject(ScheduleReminderUseCase);
 
   private readonly state = signal<ConfirmView>({ status: 'loading' });
   private readonly selectedField = signal<Field | null>(null);
@@ -59,7 +62,10 @@ export class BookingConfirmStore {
         { fieldId: field.id, startsAt, hours: this.selectedHours() },
         this.idempotencyKey,
       );
-      this.state.set({ status: 'done', booking });
+      // HU-07: the notification permission is asked now, right after the first booking (just-in-time).
+      // A failure here never undoes the booking.
+      const reminder = await this.scheduleReminder.execute(booking).catch((): ReminderResult => 'permission-denied');
+      this.state.set({ status: 'done', booking, reminder });
     } catch (error) {
       const code = errorCodeOf(error);
       if (isAppError(error) && error.kind === 'conflict' && code === 'SLOT_ALREADY_TAKEN') {

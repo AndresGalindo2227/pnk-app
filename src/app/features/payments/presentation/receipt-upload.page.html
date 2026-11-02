@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/bookings/' + bookingId" [text]="'common.back' | text"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'payments.receipt.title' | text }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (store.view(); as view) { @switch (view.status) { @case ('uploaded') {
+  <div class="center" role="status">
+    <ion-icon name="checkmark-circle" color="success" class="big" aria-hidden="true"></ion-icon>
+    <h2>{{ 'payments.receipt.uploaded' | text }}</h2>
+    <ion-button [routerLink]="['/bookings', bookingId]">{{ 'payments.receipt.backToBooking' | text }}</ion-button>
+  </div>
+  } @case ('queued') {
+  <div class="center" role="status">
+    <ion-icon name="time-outline" color="warning" class="big" aria-hidden="true"></ion-icon>
+    <h2>{{ 'payments.receipt.queued' | text }}</h2>
+    <ion-button [routerLink]="['/bookings', bookingId]">{{ 'payments.receipt.backToBooking' | text }}</ion-button>
+  </div>
+  } @default {
+  <p class="amount">
+    {{ 'payments.receipt.amount' | text }} <strong>{{ amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
+  </p>
+  <p class="hint">{{ 'payments.receipt.hint' | text }}</p>
+
+  <div class="preview">
+    @if (view.status === 'preview' || view.status === 'sending' || (view.status === 'error' && view.photo)) {
+    <img [src]="$any(view).photo.dataUrl" [alt]="'payments.receipt.previewAlt' | text" />
+    } @else {
+    <ion-icon name="cloud-upload-outline" class="big" aria-hidden="true"></ion-icon>
+    }
+  </div>
+
+  @if (view.status === 'permission-denied') {
+  <ion-text color="warning" role="alert"><p>{{ 'payments.receipt.cameraDenied' | text }}</p></ion-text>
+  } @if (view.status === 'error') {
+  <ion-text color="danger" role="alert"><p>{{ view.message }}</p></ion-text>
+  }
+
+  <div class="sources">
+    <ion-button fill="outline" [disabled]="view.status === 'permission-denied'" (click)="store.capture('camera')">
+      <ion-icon slot="start" name="camera" aria-hidden="true"></ion-icon>{{ 'payments.receipt.takePhoto' | text }}
+    </ion-button>
+    <ion-button fill="outline" (click)="store.capture('gallery')">
+      <ion-icon slot="start" name="images" aria-hidden="true"></ion-icon>{{ 'payments.receipt.gallery' | text }}
+    </ion-button>
+  </div>
+
+  <ion-button
+    expand="block"
+    class="cta"
+    [disabled]="view.status !== 'preview' && !(view.status === 'error' && view.photo)"
+    (click)="store.send(bookingId, amount)"
+  >
+    @if (view.status === 'sending') {
+    <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+    } @else { {{ 'payments.receipt.send' | text }} }
+  </ion-button>
+  <ion-note>{{ 'payments.receipt.offlineNote' | text }}</ion-note>
+  } } }
+</ion-content>
