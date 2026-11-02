@@ -60,7 +60,10 @@ export default class BookingConfirmPage implements OnInit {
     effect(() => {
       const view = this.store.view();
       if (view.status === 'done') {
-        void this.router.navigate(['/bookings', view.booking.id], { replaceUrl: true, queryParams: { created: 1 } });
+        void this.router.navigate(['/bookings', view.booking.id], {
+          replaceUrl: true,
+          queryParams: { created: 1, reminder: view.reminder },
+        });
       }
     });
   }
