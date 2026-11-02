@@ -3,6 +3,8 @@ import type { Booking, BookingRequest } from '../app/features/bookings/domain/bo
 import { BookingsRepository } from '../app/features/bookings/domain/bookings.repository';
 import { Clock } from '../app/features/bookings/domain/clock';
 import type { Field } from '../app/features/bookings/domain/field';
+import type { MatchReminder } from '../app/features/bookings/domain/reminder.port';
+import { ReminderPort } from '../app/features/bookings/domain/reminder.port';
 
 /** Hand-written test double of the bookings port: records calls, no HTTP, no Angular. */
 export class FakeBookingsRepository extends BookingsRepository {
@@ -27,8 +29,13 @@ export class FakeBookingsRepository extends BookingsRepository {
     return [];
   }
 
+  /** What getAvailability answers; set `failWith` to simulate an error such as { kind: 'network' }. */
+  availability: DayAvailability | null = null;
+  failWith: unknown = null;
+
   async getAvailability(date: string): Promise<DayAvailability> {
-    return { date, fields: [] };
+    if (this.failWith) throw this.failWith;
+    return this.availability ?? { date, fields: [] };
   }
 
   async create(request: BookingRequest, key: string): Promise<Booking> {
@@ -54,5 +61,21 @@ export class FixedClock extends Clock {
 
   now(): Date {
     return new Date(this.instant);
+  }
+}
+
+/** Notifications double: records reminders; set `permission` to simulate a denied permission. */
+export class FakeReminderPort extends ReminderPort {
+  permission: 'granted' | 'denied' = 'granted';
+  readonly scheduled: MatchReminder[] = [];
+
+  async schedule(reminder: MatchReminder): Promise<'scheduled' | 'permission-denied'> {
+    if (this.permission === 'denied') return 'permission-denied';
+    this.scheduled.push(reminder);
+    return 'scheduled';
+  }
+
+  async cancel(): Promise<void> {
+    return;
   }
 }
