@@ -13,6 +13,7 @@ import { timeoutInterceptor } from './core/network/timeout.interceptor';
 import { MemoryTokenStore } from './core/storage/memory-token-store';
 import { SecureTokenStore } from './core/storage/secure-token-store';
 import { TokenStore } from './core/storage/token-store';
+import { providePaymentsQueue } from './features/payments/payments.providers';
 
 /**
  * Global composition root.
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'es-CO' },
     { provide: TokenStore, useClass: Capacitor.isNativePlatform() ? SecureTokenStore : MemoryTokenStore },
     provideIonicAngular(),
+    providePaymentsQueue(), // flushes queued receipts when the connection returns (HU-09)
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(withInterceptors([headersInterceptor, authInterceptor, errorInterceptor, timeoutInterceptor])),
   ],

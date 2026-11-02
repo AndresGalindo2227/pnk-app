@@ -5,6 +5,7 @@ import { guestGuard } from './core/session/guest.guard';
 import { provideAuth } from './features/auth/auth.providers';
 import { provideBookings } from './features/bookings/bookings.providers';
 import { provideMyBookings } from './features/my-bookings/my-bookings.providers';
+import { providePayments } from './features/payments/payments.providers';
 
 /**
  * Single route table of pnk-app (ADR-002). Keep it in sync with
@@ -32,6 +33,11 @@ export const routes: Routes = [
       { path: 'availability', loadComponent: () => import('./features/bookings/presentation/availability.page') },
       // Static segment before the parameter: 'bookings/new' must not match 'bookings/:id'.
       { path: 'bookings/new', loadComponent: () => import('./features/bookings/presentation/booking-confirm.page') },
+      {
+        path: 'bookings/:id/receipt',
+        providers: [providePayments()],
+        loadComponent: () => import('./features/payments/presentation/receipt-upload.page'),
+      },
       { path: 'bookings/:id', loadComponent: () => import('./features/bookings/presentation/booking-detail.page') },
       { path: 'my-bookings', loadComponent: () => import('./features/my-bookings/presentation/my-bookings.page') },
       { path: 'profile', loadComponent: () => import('./features/auth/presentation/profile.page') },
