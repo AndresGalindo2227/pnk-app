@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>{{ 'myBookings.title' | text }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [value]="store.scope()" (ionChange)="changeScope($event.detail.value)">
+      <ion-segment-button value="upcoming"
+        ><ion-label>{{ 'myBookings.upcoming' | text }}</ion-label></ion-segment-button
+      >
+      <ion-segment-button value="past"><ion-label>{{ 'myBookings.past' | text }}</ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (store.view(); as view) { @switch (view.status) { @case ('loading') {
+  <div class="center"><ion-spinner name="crescent" [attr.aria-label]="'common.loading' | text"></ion-spinner></div>
+  } @case ('offline') {
+  <div class="center" role="status">
+    <ion-icon name="cloud-offline-outline" class="big" aria-hidden="true"></ion-icon>
+    <p>{{ 'myBookings.offlineNoCopy' | text }}</p>
+    <ion-button (click)="store.load()">{{ 'common.retry' | text }}</ion-button>
+  </div>
+  } @case ('error') {
+  <div class="center" role="alert">
+    <ion-text color="danger"><p>{{ view.message }}</p></ion-text>
+    <ion-button (click)="store.load()">{{ 'common.retry' | text }}</ion-button>
+  </div>
+  } @case ('empty') {
+  <div class="center" role="status">
+    <p>{{ 'myBookings.empty' | text }}</p>
+    <ion-button routerLink="/availability">{{ 'tabs.book' | text }}</ion-button>
+  </div>
+  } @case ('loaded') { @if (view.stale) {
+  <div class="stale" role="status">
+    <ion-icon name="cloud-offline-outline" aria-hidden="true"></ion-icon>
+    <span>{{ 'myBookings.stale' | text }} {{ minutesAgo(view.savedAt) }} min</span>
+  </div>
+  }
+  <ion-list>
+    @for (booking of view.items; track booking.id) {
+    <ion-item button [routerLink]="['/bookings', booking.id]" detail>
+      <ion-label>
+        <p class="code">{{ booking.code }}</p>
+        <h2>{{ booking.fieldName }}</h2>
+        <p class="capitalize">
+          {{ booking.startsAt | date: "EEEE d 'de' MMMM" : '-0500' }} · {{ booking.startsAt | date: 'h:mm a' : '-0500'
+          }}
+        </p>
+        <p>
+          {{ 'bookings.confirm.deposit' | text }}: {{ booking.depositAmount | currency: 'COP' : 'symbol-narrow' :
+          '1.0-0' }}
+        </p>
+      </ion-label>
+      <ion-badge slot="end" [color]="statusColor[booking.status]"
+        >{{ 'bookings.status.' + booking.status | text }}</ion-badge
+      >
+    </ion-item>
+    }
+  </ion-list>
+  } } }
+</ion-content>
