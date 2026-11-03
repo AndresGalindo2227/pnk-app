@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PANENKA Booking</string>
+    <string name="title_activity_main">PANENKA Booking</string>
+    <string name="package_name">co.panenka.booking</string>
+    <string name="custom_url_scheme">co.panenka.booking</string>
+</resources>

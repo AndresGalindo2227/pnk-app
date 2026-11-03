@@ -66,6 +66,9 @@ export const TEXTS_ES = {
       offlineNote: 'Si no tienes señal, lo enviaremos automáticamente cuando vuelva la conexión.',
       cameraDenied: 'No diste permiso para la cámara. Puedes elegir la foto desde la galería.',
       backToBooking: 'Volver a la reserva',
+      inReview: 'Recibimos tu comprobante. PANENKA lo revisará y confirmará tu reserva.',
+      queuedHere: 'Tu comprobante está guardado y se enviará automáticamente cuando vuelva la conexión.',
+      rejectedHint: 'Tu comprobante fue rechazado. Envía una foto nueva y clara de la transferencia.',
     },
   },
   bookings: {
@@ -96,9 +99,12 @@ export const TEXTS_ES = {
       code: 'Código de reserva',
       cancel: 'Cancelar reserva',
       seeMine: 'Ver mis reservas',
+      offline: 'Sin conexión. Mostrando los últimos datos de esta reserva.',
     },
     status: {
       pending: 'Pendiente de pago',
+      in_review: 'Pago en revisión',
+      rejected: 'Comprobante rechazado',
       confirmed: 'Confirmada',
       cancelled: 'Cancelada',
       completed: 'Jugada',
