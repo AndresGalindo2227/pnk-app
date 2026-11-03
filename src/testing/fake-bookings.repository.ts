@@ -51,6 +51,10 @@ export class FakeBookingsRepository extends BookingsRepository {
     this.cancelCalls.push(id);
     return { ...this.booking, status: 'cancelled', canCancel: false };
   }
+
+  async getCached(): Promise<Booking | null> {
+    return null;
+  }
 }
 
 /** Clock frozen at a given instant, so "slot in the past" is deterministic. */
