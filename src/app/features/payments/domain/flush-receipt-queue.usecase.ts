@@ -4,8 +4,9 @@ export const MAX_UPLOAD_ATTEMPTS = 5;
 
 /**
  * Sends the queued receipts when the connection returns.
- * Conflict policy: server-wins. A 404/409 (booking cancelled, payment already reviewed) discards
- * the item; a network error keeps it for the next attempt (offline-sync.md).
+ * - Network error: the item stays, without limit. Being offline never makes a receipt get lost.
+ * - 404/409 (booking cancelled, payment already reviewed): server-wins, the item is discarded.
+ * - Any other error (5xx, unknown): retried, and discarded after MAX_UPLOAD_ATTEMPTS (offline-sync.md).
  */
 export class FlushReceiptQueueUseCase {
   constructor(
@@ -23,10 +24,11 @@ export class FlushReceiptQueueUseCase {
         uploaded++;
       } catch (error) {
         const kind = (error as { kind?: string })?.kind;
-        if (kind === 'network' && item.attempts + 1 < MAX_UPLOAD_ATTEMPTS) {
+        if (kind === 'network') continue; // still offline: keep it as it is
+        if (kind !== 'not-found' && kind !== 'conflict' && item.attempts + 1 < MAX_UPLOAD_ATTEMPTS) {
           await this.queue.replace({ ...item, attempts: item.attempts + 1 });
         } else {
-          await this.queue.remove(item.id); // server-wins, or too many attempts
+          await this.queue.remove(item.id); // server-wins, or too many server errors
         }
       }
     }

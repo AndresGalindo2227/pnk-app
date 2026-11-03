@@ -1,8 +1,8 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 
 import { errorMessage } from '../../../core/i18n/error-messages.es';
 import { errorCodeOf } from '../../../core/network/app-error';
-import { ReceiptCapturePort } from '../domain/payments.ports';
+import { ReceiptCapturePort, ReceiptQueue, ReceiptSync } from '../domain/payments.ports';
 import type { CaptureSource, ReceiptPhoto } from '../domain/receipt';
 import { UploadReceiptUseCase } from '../domain/upload-receipt.usecase';
 
@@ -24,8 +24,16 @@ export class ReceiptUploadStore {
   private readonly capturePort = inject(ReceiptCapturePort);
   private readonly uploadReceipt = inject(UploadReceiptUseCase);
 
+  private readonly queue = inject(ReceiptQueue, { optional: true });
   private readonly state = signal<ReceiptView>({ status: 'idle' });
   readonly view = this.state.asReadonly();
+  private queuedBookingId: number | null = null;
+
+  constructor() {
+    // "Guardado sin señal" turns into "Enviado" by itself when the queue is flushed.
+    const stop = inject(ReceiptSync, { optional: true })?.onFlushed(() => void this.checkQueued());
+    if (stop) inject(DestroyRef).onDestroy(stop);
+  }
 
   async capture(source: CaptureSource): Promise<void> {
     try {
@@ -51,9 +59,16 @@ export class ReceiptUploadStore {
     this.state.set({ status: 'sending', photo });
     try {
       const result = await this.uploadReceipt.execute(bookingId, amount, photo);
+      this.queuedBookingId = result === 'queued' ? bookingId : null;
       this.state.set({ status: result });
     } catch (error) {
       this.state.set({ status: 'error', photo, message: errorMessage(errorCodeOf(error)) });
     }
+  }
+
+  private async checkQueued(): Promise<void> {
+    if (this.state().status !== 'queued' || this.queuedBookingId === null || !this.queue) return;
+    const stillWaiting = (await this.queue.all()).some((item) => item.bookingId === this.queuedBookingId);
+    if (!stillWaiting) this.state.set({ status: 'uploaded' });
   }
 }
