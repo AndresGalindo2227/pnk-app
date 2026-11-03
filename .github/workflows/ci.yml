@@ -1,0 +1,51 @@
+# Continuous integration of pnk-app (04-quality/ci.md).
+# Runs on every pull request and on every push to develop, qa and main:
+# the same quality gate the developer runs locally (lint + unit tests + production build).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [develop, qa, main]
+
+# A newer push to the same branch cancels the run that is still in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint, unit tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24 with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies (exact versions from package-lock.json)
+        run: npm ci
+
+      - name: Lint (ESLint + layer rules + Prettier)
+        run: npm run lint
+
+      - name: Unit tests (Vitest)
+        run: npm run test:unit
+
+      - name: Production build
+        run: npx ng build --configuration production
+
+      - name: Keep the built web app as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnk-app-www
+          path: www/
+          retention-days: 7
