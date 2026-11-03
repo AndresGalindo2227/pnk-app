@@ -15,8 +15,8 @@
     <ion-item>
       <ion-label>
         <h2>{{ field.name }}</h2>
-        <p class="capitalize">{{ start | date: 'EEEE d \'de\' MMMM' : '-0500' }}</p>
-        <p>{{ start | date: 'h:mm a' : '-0500' }} – {{ endOf(start, store.hours()) | date: 'h:mm a' : '-0500' }}</p>
+        <p class="capitalize">{{ start() | date: 'EEEE d \'de\' MMMM' : '-0500' }}</p>
+        <p>{{ start() | date: 'h:mm a' : '-0500' }} – {{ endOf(start(), store.hours()) | date: 'h:mm a' : '-0500' }}</p>
       </ion-label>
     </ion-item>
   </ion-list>
@@ -63,7 +63,7 @@
     expand="block"
     class="cta"
     [disabled]="store.view().status === 'submitting' || store.view().status === 'taken'"
-    (click)="store.confirm(start)"
+    (click)="store.confirm(start())"
   >
     @if (store.view().status === 'submitting') {
     <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
