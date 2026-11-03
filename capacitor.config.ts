@@ -3,18 +3,21 @@ import type { CapacitorConfig } from '@capacitor/cli';
 /**
  * Capacitor configuration (see pnk-docs/05-release).
  *
- * Classroom / LAN demo: pnk-api runs on the developer PC over plain HTTP
- * (php -S 0.0.0.0:8000), so the WebView uses the http scheme and cleartext traffic is allowed.
- * Production: the API is served over HTTPS, `androidScheme` goes back to 'https' and
- * `cleartext` is removed (security-rules.md: HTTPS only).
+ * Release (default): pnk-api is reached over HTTPS, so cleartext (plain HTTP) traffic is NOT allowed
+ * (security-rules.md: HTTPS only).
+ * LAN demo: `PNK_LAN=1 npx cap sync android` allows plain HTTP to reach the API on the developer PC
+ * (php -S 0.0.0.0:8000), used together with `ng build --configuration device`.
+ * The WebView keeps the http://localhost origin in both cases, so the API CORS list does not change.
  */
+const lanDemo = process.env['PNK_LAN'] === '1';
+
 const config: CapacitorConfig = {
   appId: 'co.panenka.booking',
   appName: 'PANENKA Booking',
   webDir: 'www',
   server: {
     androidScheme: 'http',
-    cleartext: true,
+    cleartext: lanDemo,
   },
   plugins: {
     LocalNotifications: {
