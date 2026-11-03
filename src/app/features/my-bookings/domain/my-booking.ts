@@ -8,6 +8,8 @@ export interface MyBooking {
   readonly status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show';
   readonly depositAmount: number;
   readonly totalAmount: number;
+  /** Status of the last receipt; optional so copies cached by v0.1 still load. */
+  readonly paymentStatus?: 'pending' | 'approved' | 'rejected' | null;
 }
 
 export type BookingScope = 'upcoming' | 'past';
