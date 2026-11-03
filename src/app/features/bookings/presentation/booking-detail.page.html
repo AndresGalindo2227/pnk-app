@@ -12,26 +12,30 @@
   <div class="center"><ion-spinner name="crescent" [attr.aria-label]="'common.loading' | text"></ion-spinner></div>
   } } @if (view(); as v) { @if (v.status === 'error') {
   <ion-text color="danger" role="alert"><p>{{ v.message }}</p></ion-text>
-  } @if (v.status === 'loaded') { @if (justCreated) {
+  } @if (v.status === 'loaded') { @if (justCreated()) {
   <div class="center created" role="status">
     <ion-icon name="checkmark-circle" color="success" aria-hidden="true"></ion-icon>
     <h1>{{ 'bookings.detail.created' | text }}</h1>
-    @if (reminder === 'scheduled') {
+    @if (reminder() === 'scheduled') {
     <p>{{ 'bookings.detail.reminder' | text }}</p>
-    } @else if (reminder === 'permission-denied') {
+    } @else if (reminder() === 'permission-denied') {
     <p class="warn">{{ 'bookings.detail.reminderDenied' | text }}</p>
     }
   </div>
+  } @if (v.offline) {
+  <p class="payment-note" role="status">
+    <ion-icon name="cloud-offline-outline" color="warning" aria-hidden="true"></ion-icon>{{ 'bookings.detail.offline' |
+    text }}
+  </p>
   }
-
   <ion-list>
     <ion-item>
       <ion-label>
         <p>{{ 'bookings.detail.code' | text }}</p>
         <h2>{{ v.booking.code }}</h2>
       </ion-label>
-      <ion-badge slot="end" [color]="statusColor[v.booking.status]"
-        >{{ 'bookings.status.' + v.booking.status | text }}</ion-badge
+      <ion-badge slot="end" [color]="badgeColor[badge(v.booking)]"
+        >{{ 'bookings.status.' + badge(v.booking) | text }}</ion-badge
       >
     </ion-item>
     <ion-item>
@@ -51,7 +55,19 @@
     </ion-item>
   </ion-list>
 
-  @if (v.booking.status === 'pending') {
+  @if (receiptQueued() && v.booking.status === 'pending') {
+  <p class="payment-note" role="status">
+    <ion-icon name="time-outline" color="warning" aria-hidden="true"></ion-icon>{{ 'payments.receipt.queuedHere' | text
+    }}
+  </p>
+  } @else if (badge(v.booking) === 'in_review') {
+  <p class="payment-note" role="status">
+    <ion-icon name="hourglass-outline" color="tertiary" aria-hidden="true"></ion-icon>{{ 'payments.receipt.inReview' |
+    text }}
+  </p>
+  } @else if (needsReceipt(v.booking)) { @if (badge(v.booking) === 'rejected') {
+  <ion-text color="danger" role="alert"><p>{{ 'payments.receipt.rejectedHint' | text }}</p></ion-text>
+  }
   <ion-button
     expand="block"
     class="cta"

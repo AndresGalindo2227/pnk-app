@@ -6,6 +6,9 @@ import { ReceiptCapturePort } from '../domain/payments.ports';
 import type { CaptureSource, ReceiptPhoto } from '../domain/receipt';
 import { UploadReceiptUseCase } from '../domain/upload-receipt.usecase';
 
+/** Shown when the camera or the gallery returns an error (not a cancellation). */
+const CAPTURE_FAILED = 'No pudimos obtener la foto. Inténtalo de nuevo o elige una de la galería.';
+
 /** States of the receipt screen (HU-09). */
 export type ReceiptView =
   | { readonly status: 'idle' }
@@ -31,6 +34,9 @@ export class ReceiptUploadStore {
     } catch (error) {
       if ((error as { kind?: string })?.kind === 'permission-denied') {
         this.state.set({ status: 'permission-denied' }); // the gallery is still available
+      } else if ((error as { kind?: string })?.kind === 'capture-failed') {
+        const detail = (error as { detail?: string }).detail;
+        this.state.set({ status: 'error', photo: null, message: `${CAPTURE_FAILED}${detail ? ` (${detail})` : ''}` });
       } else {
         this.state.set({ status: 'error', photo: null, message: errorMessage(errorCodeOf(error)) });
       }
