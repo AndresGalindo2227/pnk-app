@@ -70,3 +70,20 @@
 .warn {
   color: var(--ion-color-warning);
 }
+
+/* "Pago en revisión" / "Comprobante en cola" note of the booking detail (HU-09). */
+.payment-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--ion-color-step-100, #1f1f1f);
+  line-height: 1.4;
+
+  ion-icon {
+    flex: none;
+    font-size: 22px;
+  }
+}

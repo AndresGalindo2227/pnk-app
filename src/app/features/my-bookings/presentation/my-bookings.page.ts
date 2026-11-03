@@ -23,6 +23,7 @@ import {
 import { addIcons } from 'ionicons';
 import { cloudOfflineOutline } from 'ionicons/icons';
 
+import { BADGE_COLOR, badgeOf } from '../../../core/booking/booking-badge';
 import { TextPipe } from '../../../core/i18n/text.pipe';
 import type { BookingScope } from '../domain/my-booking';
 
@@ -59,13 +60,8 @@ import { MyBookingsStore } from './my-bookings.store';
 })
 export default class MyBookingsPage implements ViewWillEnter {
   protected readonly store = inject(MyBookingsStore);
-  protected readonly statusColor: Record<string, string> = {
-    pending: 'warning',
-    confirmed: 'success',
-    cancelled: 'medium',
-    completed: 'medium',
-    no_show: 'danger',
-  };
+  protected readonly badgeColor = BADGE_COLOR;
+  protected readonly badge = badgeOf;
 
   constructor() {
     addIcons({ cloudOfflineOutline });

@@ -1,7 +1,7 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import type { OnInit } from '@angular/core';
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import type { ViewWillEnter } from '@ionic/angular';
 import {
   IonBackButton,
   IonButton,
@@ -47,13 +47,13 @@ import { BookingConfirmStore } from './booking-confirm.store';
   templateUrl: './booking-confirm.page.html',
   styleUrl: './booking-confirm.page.scss',
 })
-export default class BookingConfirmPage implements OnInit {
+export default class BookingConfirmPage implements ViewWillEnter {
   protected readonly store = inject(BookingConfirmStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  protected readonly start = this.route.snapshot.queryParamMap.get('start') ?? '';
-  private readonly fieldId = Number(this.route.snapshot.queryParamMap.get('fieldId'));
+  /** Selected slot. A signal, not a constant: Ionic may reuse this page for another slot. */
+  protected readonly start = signal('');
 
   constructor() {
     // When the booking is created, go to its detail and drop this screen from the history.
@@ -68,8 +68,14 @@ export default class BookingConfirmPage implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    void this.store.init(this.fieldId);
+  /**
+   * Ionic can keep this page alive and show it again for a different field or hour, so the query
+   * params are read every time the page is entered, never once in the constructor.
+   */
+  ionViewWillEnter(): void {
+    const params = this.route.snapshot.queryParamMap;
+    this.start.set(params.get('start') ?? '');
+    void this.store.init(Number(params.get('fieldId')));
   }
 
   endOf(start: string, hours: number): string {

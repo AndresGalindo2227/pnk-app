@@ -37,7 +37,12 @@ export class BookingConfirmStore {
   readonly hourOptions = Array.from({ length: BOOKING_RULES.maxHours }, (_, i) => i + 1);
   readonly amounts = computed(() => estimateAmounts(this.selectedField()?.hourlyPrice ?? 0, this.selectedHours()));
 
+  /** Starts a NEW booking attempt: clean state, 1 hour and a fresh idempotency key. */
   async init(fieldId: number): Promise<void> {
+    this.state.set({ status: 'loading' });
+    this.selectedField.set(null);
+    this.selectedHours.set(BOOKING_RULES.minHours);
+    this.idempotencyKey = crypto.randomUUID();
     try {
       const fields = await this.repository.getFields();
       const field = fields.find((f) => f.id === fieldId) ?? null;
@@ -70,7 +75,7 @@ export class BookingConfirmStore {
       const code = errorCodeOf(error);
       if (isAppError(error) && error.kind === 'conflict' && code === 'SLOT_ALREADY_TAKEN') {
         this.state.set({ status: 'taken', message: errorMessage(code) });
-      } else if (isAppError(error) && error.kind === 'validation') {
+      } else if (isAppError(error) && error.kind === 'validation' && error.fields.includes('slot-in-the-past')) {
         this.state.set({ status: 'error', message: errorMessage('SLOT_IN_THE_PAST') });
       } else {
         this.state.set({ status: 'error', message: errorMessage(code) });

@@ -16,6 +16,7 @@ interface BookingDto {
   status: MyBooking['status'];
   totalAmount: number;
   depositAmount: number;
+  paymentStatus: MyBooking['paymentStatus'];
 }
 
 /** Adapter: GET /bookings?scope= of pnk-api. */
@@ -36,6 +37,7 @@ export class MyBookingsHttpRemote extends MyBookingsRemote {
       status: d.status,
       depositAmount: d.depositAmount,
       totalAmount: d.totalAmount,
+      paymentStatus: d.paymentStatus ?? null,
     }));
   }
 }
