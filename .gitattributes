@@ -4,3 +4,6 @@
 *.jpg binary
 *.jks binary
 *.keystore binary
+# Windows scripts (gradlew.bat) need CRLF to run in cmd
+*.bat text eol=crlf
+*.cmd text eol=crlf
