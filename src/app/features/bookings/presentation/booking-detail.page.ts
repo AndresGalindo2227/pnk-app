@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   IonBackButton,
@@ -26,7 +26,7 @@ import { BADGE_COLOR, badgeOf, needsReceipt } from '../../../core/booking/bookin
 import { errorMessage } from '../../../core/i18n/error-messages.es';
 import { TextPipe } from '../../../core/i18n/text.pipe';
 import { errorCodeOf, isAppError } from '../../../core/network/app-error';
-import { ReceiptQueue } from '../../payments/domain/payments.ports';
+import { ReceiptQueue, ReceiptSync } from '../../payments/domain/payments.ports';
 import type { Booking } from '../domain/booking';
 import { BookingsRepository } from '../domain/bookings.repository';
 import { CancelBookingUseCase } from '../domain/cancel-booking.usecase';
@@ -88,6 +88,22 @@ export default class BookingDetailPage implements ViewWillEnter {
 
   constructor() {
     addIcons({ checkmarkCircle, cloudOfflineOutline, hourglassOutline, timeOutline });
+    // When the queued receipt of this booking is finally sent, show "Pago en revisión" without leaving the screen.
+    const stop = inject(ReceiptSync).onFlushed(() => void this.afterFlush());
+    inject(DestroyRef).onDestroy(stop);
+  }
+
+  private async afterFlush(): Promise<void> {
+    const shown = this.view();
+    if (!this.receiptQueued() || shown.status !== 'loaded') return;
+    const id = shown.booking.id;
+    if ((await this.receiptQueue.all()).some((item) => item.bookingId === id)) return;
+    this.receiptQueued.set(false);
+    try {
+      this.view.set({ status: 'loaded', booking: await this.repository.getById(id), busy: false });
+    } catch {
+      // still offline for GET: the next visit refreshes it
+    }
   }
 
   /**
