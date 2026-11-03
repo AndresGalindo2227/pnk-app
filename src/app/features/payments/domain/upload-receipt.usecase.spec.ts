@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FakeReceiptsRemote, InMemoryReceiptQueue, PHOTO } from '../../../../testing/fake-payments';
 
-import { FlushReceiptQueueUseCase } from './flush-receipt-queue.usecase';
+import { FlushReceiptQueueUseCase, MAX_UPLOAD_ATTEMPTS } from './flush-receipt-queue.usecase';
 import { UploadReceiptUseCase } from './upload-receipt.usecase';
 
 // HU-09 — Transfer receipt photo, queued when there is no signal.
@@ -53,6 +53,28 @@ describe('UploadReceiptUseCase and FlushReceiptQueueUseCase', () => {
     remote.failWith = { kind: 'conflict', code: 'PAYMENT_ALREADY_REVIEWED' };
 
     expect(await new FlushReceiptQueueUseCase(remote, queue).execute()).toBe(0);
+    expect(queue.items).toHaveLength(0);
+  });
+
+  it('flush_stillOffline_keepsTheItemForever', async () => {
+    remote.failWith = { kind: 'network' };
+    await upload.execute(87, 35000, PHOTO);
+    const flush = new FlushReceiptQueueUseCase(remote, queue);
+
+    for (let i = 0; i < MAX_UPLOAD_ATTEMPTS + 2; i++) await flush.execute();
+
+    expect(queue.items).toHaveLength(1);
+    expect(queue.items[0].attempts).toBe(0);
+  });
+
+  it('flush_serverKeepsFailing_givesUpAfterMaxAttempts', async () => {
+    remote.failWith = { kind: 'network' };
+    await upload.execute(87, 35000, PHOTO);
+    remote.failWith = { kind: 'unknown' };
+    const flush = new FlushReceiptQueueUseCase(remote, queue);
+
+    for (let i = 0; i < MAX_UPLOAD_ATTEMPTS; i++) await flush.execute();
+
     expect(queue.items).toHaveLength(0);
   });
 });

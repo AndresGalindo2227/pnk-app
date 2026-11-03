@@ -14,6 +14,15 @@ export abstract class ReceiptsRemote {
   abstract upload(bookingId: number, amount: number, photo: ReceiptPhoto): Promise<void>;
 }
 
+/**
+ * Port that tells the screens when the offline queue was flushed (plain callbacks, no framework),
+ * so "en cola" can turn into "enviado" without the player leaving the screen.
+ */
+export abstract class ReceiptSync {
+  /** Registers a listener called after every flush attempt; returns a function that unregisters it. */
+  abstract onFlushed(listener: () => void): () => void;
+}
+
 /** Port for the offline queue of receipts (offline-sync.md). */
 export abstract class ReceiptQueue {
   abstract add(item: QueuedReceipt): Promise<void>;
