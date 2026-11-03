@@ -56,8 +56,8 @@
           '1.0-0' }}
         </p>
       </ion-label>
-      <ion-badge slot="end" [color]="statusColor[booking.status]"
-        >{{ 'bookings.status.' + booking.status | text }}</ion-badge
+      <ion-badge slot="end" [color]="badgeColor[badge(booking)]"
+        >{{ 'bookings.status.' + badge(booking) | text }}</ion-badge
       >
     </ion-item>
     }

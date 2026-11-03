@@ -14,6 +14,7 @@ export const ERROR_MESSAGES_ES: Readonly<Record<string, string>> = {
   SESSION_EXPIRED: 'Tu sesión expiró. Inicia sesión de nuevo.',
   TOO_MANY_REQUESTS: 'Demasiados intentos. Espera un momento e inténtalo de nuevo.',
   NOT_FOUND: 'No encontramos lo que buscas.',
+  RECEIPT_ALREADY_SENT: 'Ya enviaste el comprobante de esta reserva. Está en revisión.',
   FILE_TOO_LARGE: 'La foto pesa más de 2 MB.',
   VALIDATION_ERROR: 'Revisa los datos marcados.',
   NETWORK: 'No hay conexión. Revisa tu internet e inténtalo de nuevo.',
