@@ -24,6 +24,7 @@
   <p class="amount">
     {{ 'payments.receipt.amount' | text }} <strong>{{ amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
   </p>
+  <pnk-payment-accounts></pnk-payment-accounts>
   <p class="hint">{{ 'payments.receipt.hint' | text }}</p>
 
   <div class="preview">

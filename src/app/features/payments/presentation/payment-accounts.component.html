@@ -1,0 +1,37 @@
+<section class="accounts" [attr.aria-label]="'payments.accounts.title' | text">
+  <h2>{{ 'payments.accounts.title' | text }}</h2>
+  @if (accounts(); as list) {
+    @for (account of list; track account.number) {
+      <div class="account">
+        <div class="data">
+          <span class="entity">{{ account.entity }} · {{ account.accountType }}</span>
+          <strong class="number">{{ account.number }}</strong>
+          <span class="holder"
+            >{{ 'payments.accounts.holder' | text }} {{ account.holder }}
+            @if (account.holderDocument) {
+              · {{ account.holderDocument }}
+            }
+          </span>
+        </div>
+        <ion-button
+          size="small"
+          [fill]="copied() === account.number ? 'solid' : 'outline'"
+          [color]="copied() === account.number ? 'success' : 'primary'"
+          (click)="copy(account)"
+          [attr.aria-label]="('payments.accounts.copyLabel' | text) + ' ' + account.number"
+        >
+          <ion-icon
+            slot="start"
+            [name]="copied() === account.number ? 'checkmark' : 'copy-outline'"
+            aria-hidden="true"
+          ></ion-icon>
+          {{ (copied() === account.number ? 'payments.accounts.copied' : 'payments.accounts.copy') | text }}
+        </ion-button>
+      </div>
+    } @empty {
+      <p class="empty">{{ 'payments.accounts.empty' | text }}</p>
+    }
+  } @else {
+    <ion-spinner name="dots" [attr.aria-label]="'common.loading' | text"></ion-spinner>
+  }
+</section>

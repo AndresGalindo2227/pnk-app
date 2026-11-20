@@ -19,6 +19,7 @@ import { camera, checkmarkCircle, cloudUploadOutline, images, timeOutline } from
 
 import { TextPipe } from '../../../core/i18n/text.pipe';
 
+import { PaymentAccountsComponent } from './payment-accounts.component';
 import { ReceiptUploadStore } from './receipt-upload.store';
 
 /** HU-09: take or pick the photo of the transfer receipt and send it (queued when offline). */
@@ -28,6 +29,7 @@ import { ReceiptUploadStore } from './receipt-upload.store';
     CurrencyPipe,
     RouterLink,
     TextPipe,
+    PaymentAccountsComponent,
     IonHeader,
     IonToolbar,
     IonTitle,

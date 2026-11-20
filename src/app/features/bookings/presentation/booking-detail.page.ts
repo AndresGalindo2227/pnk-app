@@ -27,6 +27,7 @@ import { errorMessage } from '../../../core/i18n/error-messages.es';
 import { TextPipe } from '../../../core/i18n/text.pipe';
 import { errorCodeOf, isAppError } from '../../../core/network/app-error';
 import { ReceiptQueue, ReceiptSync } from '../../payments/domain/payments.ports';
+import { PaymentAccountsComponent } from '../../payments/presentation/payment-accounts.component';
 import type { Booking } from '../domain/booking';
 import { BookingsRepository } from '../domain/bookings.repository';
 import { CancelBookingUseCase } from '../domain/cancel-booking.usecase';
@@ -51,6 +52,7 @@ type DetailView =
     CurrencyPipe,
     RouterLink,
     TextPipe,
+    PaymentAccountsComponent,
     IonHeader,
     IonToolbar,
     IonTitle,
