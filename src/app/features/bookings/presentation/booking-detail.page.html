@@ -68,6 +68,7 @@
   } @else if (needsReceipt(v.booking)) { @if (badge(v.booking) === 'rejected') {
   <ion-text color="danger" role="alert"><p>{{ 'payments.receipt.rejectedHint' | text }}</p></ion-text>
   }
+  <pnk-payment-accounts></pnk-payment-accounts>
   <ion-button
     expand="block"
     class="cta"

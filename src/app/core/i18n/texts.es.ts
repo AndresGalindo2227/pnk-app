@@ -56,7 +56,7 @@ export const TEXTS_ES = {
       title: 'Subir comprobante',
       upload: 'Subir comprobante de pago',
       amount: 'Abono a pagar:',
-      hint: 'Toma una foto clara de la transferencia de Nequi, Daviplata o Bancolombia.',
+      hint: 'Después de transferir, toma una foto clara del comprobante y envíala aquí.',
       takePhoto: 'Tomar foto',
       gallery: 'Galería',
       previewAlt: 'Foto del comprobante',
@@ -69,6 +69,14 @@ export const TEXTS_ES = {
       inReview: 'Recibimos tu comprobante. PANENKA lo revisará y confirmará tu reserva.',
       queuedHere: 'Tu comprobante está guardado y se enviará automáticamente cuando vuelva la conexión.',
       rejectedHint: 'Tu comprobante fue rechazado. Envía una foto nueva y clara de la transferencia.',
+    },
+    accounts: {
+      title: 'Transfiere el abono a una de estas cuentas',
+      holder: 'A nombre de',
+      copy: 'Copiar',
+      copied: 'Copiado',
+      copyLabel: 'Copiar el número',
+      empty: 'Pregunta en PANENKA a qué cuenta transferir el abono.',
     },
   },
   bookings: {

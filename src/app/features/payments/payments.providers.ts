@@ -2,10 +2,17 @@ import type { EnvironmentProviders, Provider } from '@angular/core';
 import { inject, makeEnvironmentProviders, provideAppInitializer } from '@angular/core';
 
 import { CameraAdapter } from './data/camera.adapter';
+import { PaymentAccountsHttpSource } from './data/payment-accounts-http.source';
 import { ReceiptQueueFlusher } from './data/receipt-queue.flusher';
 import { PreferencesReceiptQueue } from './data/receipt-queue.store';
 import { ReceiptsHttpRemote } from './data/receipts-http.remote';
-import { ReceiptCapturePort, ReceiptQueue, ReceiptSync, ReceiptsRemote } from './domain/payments.ports';
+import {
+  PaymentAccountsSource,
+  ReceiptCapturePort,
+  ReceiptQueue,
+  ReceiptSync,
+  ReceiptsRemote,
+} from './domain/payments.ports';
 import { UploadReceiptUseCase } from './domain/upload-receipt.usecase';
 
 /** App-wide pieces of payments: the queue and its flusher must live while the app runs. */
@@ -14,6 +21,7 @@ export function providePaymentsQueue(): EnvironmentProviders {
     { provide: ReceiptsRemote, useExisting: ReceiptsHttpRemote },
     { provide: ReceiptQueue, useExisting: PreferencesReceiptQueue },
     { provide: ReceiptSync, useExisting: ReceiptQueueFlusher },
+    { provide: PaymentAccountsSource, useExisting: PaymentAccountsHttpSource },
     provideAppInitializer(() => {
       void inject(ReceiptQueueFlusher).start();
     }),

@@ -1,4 +1,13 @@
+import type { PaymentAccount } from './payment-account';
 import type { CaptureSource, QueuedReceipt, ReceiptPhoto } from './receipt';
+
+/**
+ * Port for the accounts where the deposit is paid (GET /config). Falls back to the last copy
+ * saved on the phone when there is no connection; empty when there is none.
+ */
+export abstract class PaymentAccountsSource {
+  abstract load(): Promise<readonly PaymentAccount[]>;
+}
 
 /**
  * Port for the camera / gallery. The adapter asks for the camera permission only when the player
