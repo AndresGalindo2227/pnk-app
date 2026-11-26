@@ -22,6 +22,7 @@ export class FakeBookingsRepository extends BookingsRepository {
     totalAmount: 70000,
     depositAmount: 35000,
     paymentStatus: null,
+    paidAmount: 0,
     canCancel: true,
   };
 

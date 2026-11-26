@@ -1,11 +1,11 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { IonButton, IonIcon, IonSpinner } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { checkmark, copyOutline } from 'ionicons/icons';
 
 import { TextPipe } from '../../../core/i18n/text.pipe';
 import type { PaymentAccount } from '../domain/payment-account';
-import { PaymentAccountsSource } from '../domain/payments.ports';
+import { PaymentSettingsSource } from '../domain/payments.ports';
 
 /** Where to pay the deposit: the business accounts, each with a button that copies the number. */
 @Component({
@@ -15,7 +15,9 @@ import { PaymentAccountsSource } from '../domain/payments.ports';
   styleUrl: './payment-accounts.component.scss',
 })
 export class PaymentAccountsComponent {
-  private readonly source = inject(PaymentAccountsSource);
+  private readonly source = inject(PaymentSettingsSource);
+  /** Text key of the heading (the detail screen says "O transfiere…" below the online payment). */
+  readonly heading = input('payments.accounts.title');
 
   protected readonly accounts = signal<readonly PaymentAccount[] | null>(null);
   /** Number just copied: its button says "Copiado" for a moment. */
@@ -24,7 +26,7 @@ export class PaymentAccountsComponent {
 
   constructor() {
     addIcons({ copyOutline, checkmark });
-    void this.source.load().then((list) => this.accounts.set(list));
+    void this.source.load().then((settings) => this.accounts.set(settings.accounts));
     inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
   }
 

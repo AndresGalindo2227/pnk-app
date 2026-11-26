@@ -27,6 +27,7 @@ import { errorMessage } from '../../../core/i18n/error-messages.es';
 import { TextPipe } from '../../../core/i18n/text.pipe';
 import { errorCodeOf, isAppError } from '../../../core/network/app-error';
 import { ReceiptQueue, ReceiptSync } from '../../payments/domain/payments.ports';
+import { OnlinePaymentComponent } from '../../payments/presentation/online-payment.component';
 import { PaymentAccountsComponent } from '../../payments/presentation/payment-accounts.component';
 import type { Booking } from '../domain/booking';
 import { BookingsRepository } from '../domain/bookings.repository';
@@ -53,6 +54,7 @@ type DetailView =
     RouterLink,
     TextPipe,
     PaymentAccountsComponent,
+    OnlinePaymentComponent,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -141,6 +143,17 @@ export default class BookingDetailPage implements ViewWillEnter {
       } else {
         this.view.set({ status: 'error', message: errorMessage(errorCodeOf(error)) });
       }
+    }
+  }
+
+  /** A payment arrived (online payment approved): show the new status without leaving the screen. */
+  async reload(): Promise<void> {
+    const shown = this.view();
+    if (shown.status !== 'loaded') return;
+    try {
+      this.view.set({ status: 'loaded', booking: await this.repository.getById(shown.booking.id), busy: false });
+    } catch {
+      // the next visit refreshes it
     }
   }
 

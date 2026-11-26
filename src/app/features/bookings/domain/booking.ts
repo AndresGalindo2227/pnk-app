@@ -13,6 +13,8 @@ export interface Booking {
   readonly totalAmount: number;
   readonly depositAmount: number;
   readonly paymentStatus: PaymentStatus;
+  /** Approved payments so far (receipts, counter and online). */
+  readonly paidAmount: number;
   readonly canCancel: boolean;
 }
 

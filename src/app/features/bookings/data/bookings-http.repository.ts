@@ -59,7 +59,7 @@ export class BookingsHttpRepository extends BookingsRepository {
    */
   async getCached(id: number): Promise<Booking | null> {
     const saved = await this.cache.read<Booking>(detailKey(id));
-    if (saved) return { ...saved.value, canCancel: false };
+    if (saved) return { ...saved.value, paidAmount: saved.value.paidAmount ?? 0, canCancel: false };
 
     for (const scope of ['upcoming', 'past']) {
       const list = await this.cache.read<ListRow[]>(`myBookings.${scope}.v1`);
@@ -76,6 +76,7 @@ export class BookingsHttpRepository extends BookingsRepository {
           totalAmount: row.totalAmount,
           depositAmount: row.depositAmount,
           paymentStatus: row.paymentStatus ?? null,
+          paidAmount: row.paidAmount ?? 0,
           canCancel: false,
         };
       }
@@ -95,4 +96,4 @@ function detailKey(id: number): string {
 }
 
 /** Shape of a row saved by the my-bookings cache (MyBooking). */
-type ListRow = Omit<Booking, 'fieldId' | 'canCancel'>;
+type ListRow = Omit<Booking, 'fieldId' | 'canCancel' | 'paidAmount'> & { readonly paidAmount?: number };

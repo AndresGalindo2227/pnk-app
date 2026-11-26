@@ -2,12 +2,16 @@ import type { EnvironmentProviders, Provider } from '@angular/core';
 import { inject, makeEnvironmentProviders, provideAppInitializer } from '@angular/core';
 
 import { CameraAdapter } from './data/camera.adapter';
-import { PaymentAccountsHttpSource } from './data/payment-accounts-http.source';
+import { CapacitorCheckoutBrowser } from './data/checkout-browser.adapter';
+import { OnlinePaymentsHttpRemote } from './data/online-payments-http.remote';
+import { PaymentSettingsHttpSource } from './data/payment-settings-http.source';
 import { ReceiptQueueFlusher } from './data/receipt-queue.flusher';
 import { PreferencesReceiptQueue } from './data/receipt-queue.store';
 import { ReceiptsHttpRemote } from './data/receipts-http.remote';
 import {
-  PaymentAccountsSource,
+  CheckoutBrowser,
+  OnlinePaymentsRemote,
+  PaymentSettingsSource,
   ReceiptCapturePort,
   ReceiptQueue,
   ReceiptSync,
@@ -21,7 +25,9 @@ export function providePaymentsQueue(): EnvironmentProviders {
     { provide: ReceiptsRemote, useExisting: ReceiptsHttpRemote },
     { provide: ReceiptQueue, useExisting: PreferencesReceiptQueue },
     { provide: ReceiptSync, useExisting: ReceiptQueueFlusher },
-    { provide: PaymentAccountsSource, useExisting: PaymentAccountsHttpSource },
+    { provide: PaymentSettingsSource, useExisting: PaymentSettingsHttpSource },
+    { provide: OnlinePaymentsRemote, useExisting: OnlinePaymentsHttpRemote },
+    { provide: CheckoutBrowser, useExisting: CapacitorCheckoutBrowser },
     provideAppInitializer(() => {
       void inject(ReceiptQueueFlusher).start();
     }),

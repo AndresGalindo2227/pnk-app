@@ -1,0 +1,61 @@
+@if (enabled() && choices().length) {
+  <section class="online" [attr.aria-label]="'payments.online.title' | text">
+    <h2>{{ 'payments.online.title' | text }}</h2>
+    @switch (view().status) {
+      @case ('paid') {
+        <p class="done" role="status">
+          <ion-icon name="checkmark-circle" color="success" aria-hidden="true"></ion-icon>
+          {{ 'payments.online.paid' | text }}
+        </p>
+      }
+      @case ('waiting') {
+        <div class="waiting" role="status">
+          <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+          <p>{{ 'payments.online.waiting' | text }}</p>
+        </div>
+        <ion-button expand="block" fill="outline" (click)="check()">
+          <ion-icon slot="start" name="refresh-outline" aria-hidden="true"></ion-icon>
+          {{ 'payments.online.alreadyPaid' | text }}
+        </ion-button>
+        <ion-button expand="block" fill="clear" size="small" (click)="cancelWaiting()">
+          {{ 'payments.online.notPaid' | text }}
+        </ion-button>
+      }
+      @default {
+        @if (choices().length > 1) {
+          <div class="choices" role="radiogroup" [attr.aria-label]="'payments.online.choose' | text">
+            @for (c of choices(); track c.option) {
+              <button
+                type="button"
+                role="radio"
+                [attr.aria-checked]="chosen()?.option === c.option"
+                [class.selected]="chosen()?.option === c.option"
+                (click)="selected.set(c.option)"
+              >
+                <span>{{ 'payments.online.' + c.option | text }}</span>
+                <strong>{{ c.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
+              </button>
+            }
+          </div>
+        }
+        <ion-button expand="block" class="cta" [disabled]="view().status === 'opening'" (click)="pay()">
+          @if (view().status === 'opening') {
+            <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+          } @else {
+            <ion-icon slot="start" name="card-outline" aria-hidden="true"></ion-icon>
+            {{ 'payments.online.pay' | text }}
+            {{ chosen()?.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+          }
+        </ion-button>
+        <p class="hint">{{ 'payments.online.hint' | text }}</p>
+        @if (view(); as v) {
+          @if (v.status === 'idle' && v.message) {
+            <ion-text color="danger" role="alert"
+              ><p>{{ v.message }}</p></ion-text
+            >
+          }
+        }
+      }
+    }
+  </section>
+}

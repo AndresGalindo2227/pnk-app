@@ -1,5 +1,5 @@
-<section class="accounts" [attr.aria-label]="'payments.accounts.title' | text">
-  <h2>{{ 'payments.accounts.title' | text }}</h2>
+<section class="accounts" [attr.aria-label]="heading() | text">
+  <h2>{{ heading() | text }}</h2>
   @if (accounts(); as list) {
     @for (account of list; track account.number) {
       <div class="account">
