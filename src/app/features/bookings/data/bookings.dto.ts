@@ -22,6 +22,7 @@ export interface BookingDto {
   totalAmount: number;
   depositAmount: number;
   paymentStatus?: 'pending' | 'approved' | 'rejected' | null;
+  paidAmount?: number;
   canCancel: boolean;
   createdAt: string;
 }

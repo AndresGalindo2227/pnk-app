@@ -1,12 +1,28 @@
-import type { PaymentAccount } from './payment-account';
+import type { OnlineCheckout, OnlinePaymentCheck, OnlinePaymentOption } from './online-payment';
+import type { PaymentSettings } from './payment-settings';
 import type { CaptureSource, QueuedReceipt, ReceiptPhoto } from './receipt';
 
 /**
- * Port for the accounts where the deposit is paid (GET /config). Falls back to the last copy
- * saved on the phone when there is no connection; empty when there is none.
+ * Port for how the bookings are paid (GET /config): deposit accounts and whether online payments
+ * are on. Falls back to the last copy saved on the phone when there is no connection.
  */
-export abstract class PaymentAccountsSource {
-  abstract load(): Promise<readonly PaymentAccount[]>;
+export abstract class PaymentSettingsSource {
+  abstract load(): Promise<PaymentSettings>;
+}
+
+/** Port for the online payment with Wompi (POST /bookings/{id}/payments/online[/check]). */
+export abstract class OnlinePaymentsRemote {
+  abstract start(bookingId: number, option: OnlinePaymentOption): Promise<OnlineCheckout>;
+  abstract check(bookingId: number): Promise<OnlinePaymentCheck>;
+}
+
+/**
+ * Port for the browser where the player pays. `onReturn` is called when the player closes it
+ * or comes back to the app; it returns a function that unregisters the listener.
+ */
+export abstract class CheckoutBrowser {
+  abstract open(url: string): Promise<void>;
+  abstract onReturn(listener: () => void): () => void;
 }
 
 /**

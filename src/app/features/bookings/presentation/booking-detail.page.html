@@ -55,7 +55,16 @@
     </ion-item>
   </ion-list>
 
-  @if (receiptQueued() && v.booking.status === 'pending') {
+  @if ( (v.booking.status === 'pending' || v.booking.status === 'confirmed') && !v.offline && !receiptQueued() &&
+  badge(v.booking) !== 'in_review' ) {
+  <pnk-online-payment
+    [bookingId]="v.booking.id"
+    [totalAmount]="v.booking.totalAmount"
+    [depositAmount]="v.booking.depositAmount"
+    [paidAmount]="v.booking.paidAmount"
+    (paid)="reload()"
+  ></pnk-online-payment>
+  } @if (receiptQueued() && v.booking.status === 'pending') {
   <p class="payment-note" role="status">
     <ion-icon name="time-outline" color="warning" aria-hidden="true"></ion-icon>{{ 'payments.receipt.queuedHere' | text
     }}
@@ -68,7 +77,7 @@
   } @else if (needsReceipt(v.booking)) { @if (badge(v.booking) === 'rejected') {
   <ion-text color="danger" role="alert"><p>{{ 'payments.receipt.rejectedHint' | text }}</p></ion-text>
   }
-  <pnk-payment-accounts></pnk-payment-accounts>
+  <pnk-payment-accounts heading="payments.accounts.titleOr"></pnk-payment-accounts>
   <ion-button
     expand="block"
     class="cta"

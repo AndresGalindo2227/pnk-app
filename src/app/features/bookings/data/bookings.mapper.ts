@@ -38,6 +38,7 @@ export function toBooking(dto: BookingDto): Booking {
     totalAmount: dto.totalAmount,
     depositAmount: dto.depositAmount,
     paymentStatus: dto.paymentStatus ?? null,
+    paidAmount: dto.paidAmount ?? 0,
     canCancel: dto.canCancel,
   };
 }

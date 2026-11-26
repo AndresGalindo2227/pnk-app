@@ -31,6 +31,6 @@ export const BADGE_COLOR: Readonly<Record<BookingBadge, string>> = {
   rejected: 'danger',
   confirmed: 'success',
   cancelled: 'medium',
-  completed: 'medium',
+  completed: 'success',
   no_show: 'danger',
 };
